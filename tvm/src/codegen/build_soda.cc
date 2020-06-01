@@ -1,4 +1,5 @@
 #include <fstream>
+#include <vector>
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -18,14 +19,14 @@ enum class SodaBackend {
   XHLS
 };
 
-void SODA2HLSC(std::string& code) {
+void SODA2HLSC(std::string& code, const char* interface) {
   // Handle concatenated code recursively.
   size_t sep = code.find("\n\n");
   if (sep != std::string::npos) {
     std::string code1 = code.substr(0, sep + 1);
     std::string code2 = code.substr(sep + 2);
-    SODA2HLSC(code1);
-    SODA2HLSC(code2);
+    SODA2HLSC(code1, interface);
+    SODA2HLSC(code2, interface);
     code = code1 + code2;
     return;
   }
@@ -109,7 +110,8 @@ void SODA2HLSC(std::string& code) {
 
     // Invoke sodac
     check(execlp("python3", "python3", "-m", "soda.sodac", "--xocl-kernel", "-",
-                 "-", nullptr));
+                 "-", interface ? "--xocl-interface" : nullptr, interface,
+                 nullptr));
   }
 }
 

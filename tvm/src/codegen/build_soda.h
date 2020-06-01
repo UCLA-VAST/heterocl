@@ -12,9 +12,9 @@
 namespace TVM {
 namespace codegen {
 
-void SODA2HLSC(std::string& code);
+void SODA2HLSC(std::string& code, const char* interface = nullptr);
 
-}
-}
+}  // namespace codegen
+}  // namespace TVM
 
 #endif
